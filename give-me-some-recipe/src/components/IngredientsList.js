@@ -1,5 +1,5 @@
-import React from "react";
-import { Checkbox, Box, Text, SimpleGrid } from "@chakra-ui/react";
+import React from 'react';
+import { Checkbox, Box, Text, SimpleGrid } from '@chakra-ui/react';
 
 export default class IngredientsList extends React.Component {
   constructor(props) {
@@ -11,6 +11,9 @@ export default class IngredientsList extends React.Component {
 
   render() {
     const data = this.state.ingredients;
+    const ingredients = Object.entries(data);
+    console.log(Object.entries(data), 'djaiojdoaeuhfauoiehfaieuh');
+
     return (
       <div>
         <Box borderWidth="1px" borderRadius="lg" bg="white" px={10} py={5}>
@@ -24,9 +27,16 @@ export default class IngredientsList extends React.Component {
             spacing={10}
             minChildWidth="220px"
             p={3}>
-            <Checkbox size="lg" colorScheme="orange">
-              {data}
-            </Checkbox>
+            {ingredients.map((item) => {
+              if (item[1].length > 1) {
+                return (
+                  <Checkbox size="lg" colorScheme="orange" key={item[0]}>
+                    {item[1]}
+                  </Checkbox>
+                );
+              }
+              return '';
+            })}
           </SimpleGrid>
         </Box>
       </div>
