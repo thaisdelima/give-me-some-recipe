@@ -1,6 +1,5 @@
 import React from 'react';
 import './RecipePage.css';
-// import PropTypes from "prop-types";
 import { Container, Box, Text, Flex, Spinner } from '@chakra-ui/react';
 import IngredientsList from '../components/IngredientsList';
 import axios from 'axios';
@@ -17,65 +16,27 @@ export default class RecipePage extends React.Component {
   }
 
   componentDidMount() {
+    // todo: move this to a service
     axios
       .get(`https://www.themealdb.com/api/json/v1/1/random.php`)
       .then((res) => {
         const resp = res.data.meals[0];
         this.setState({ recipe: resp.strInstructions });
         this.setState({ title: resp.strMeal });
-        const allowed = [
-          'strIngredient1',
-          'strIngredient2',
-          'strIngredient3',
-          'strIngredient4',
-          'strIngredient5',
-          'strIngredient6',
-          'strIngredient7',
-          'strIngredient8',
-          'strIngredient9',
-          'strIngredient10',
-          'strIngredient11',
-          'strIngredient12',
-          'strIngredient13',
-          'strIngredient14',
-          'strIngredient15',
-          'strIngredient16',
-          'strIngredient17',
-          'strIngredient18',
-          'strIngredient19',
-          'strIngredient20',
-          'strMeasure1',
-          'strMeasure2',
-          'strMeasure3',
-          'strMeasure4',
-          'strMeasure5',
-          'strMeasure6',
-          'strMeasure7',
-          'strMeasure8',
-          'strMeasure9',
-          'strMeasure10',
-          'strMeasure11',
-          'strMeasure12',
-          'strMeasure13',
-          'strMeasure14',
-          'strMeasure15',
-          'strMeasure16',
-          'strMeasure17',
-          'strMeasure18',
-          'strMeasure19',
-          'strMeasure20',
-        ];
-
-        const filtered = Object.keys(resp)
-          .filter((key) => allowed.includes(key))
-          .reduce((obj, key) => {
-            obj[key] = resp[key];
-            return obj;
-          }, {});
-
-        console.log(resp, filtered, 'ingrs');
+        let filtered = {
+          ingredients: {},
+          measure: {},
+        };
+        Object.entries(resp).forEach((item) => {
+          if (item[0].includes('strIngredient')) {
+            filtered.ingredients[item[0]] = item[1];
+          }
+          if (item[0].includes('strMeasure')) {
+            filtered.measure[item[0]] = item[1];
+          }
+          return filtered;
+        }, {});
         this.setState({ ingredients: filtered });
-        console.log('resp', resp);
       });
   }
 
